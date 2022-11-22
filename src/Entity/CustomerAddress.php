@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\CustomerAddressRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use App\Repository\CustomerAddressRepository;
 
 #[ORM\Entity(repositoryClass: CustomerAddressRepository::class)]
+#[ApiResource]
 class CustomerAddress
 {
     #[ORM\Id]
