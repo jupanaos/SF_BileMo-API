@@ -3,8 +3,10 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProductRepository;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
@@ -12,6 +14,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: [
         'groups' => ['getProduct']
         ]
+)]
+#[ApiFilter(
+    SearchFilter::class,
+    properties: [
+        'name' => SearchFilter::STRATEGY_PARTIAL,
+        'category' => SearchFilter::STRATEGY_PARTIAL,
+    ]
 )]
 class Product
 {

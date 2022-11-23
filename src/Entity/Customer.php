@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter as FilterSearchFilter;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
@@ -27,6 +28,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: [
         'groups' => ['getCustomer']
         ]
+)]
+#[ApiFilter(
+    SearchFilter::class,
+    properties: [
+        'firstName' => SearchFilter::STRATEGY_PARTIAL,
+        'lastName' => SearchFilter::STRATEGY_PARTIAL,
+        'email' => SearchFilter::STRATEGY_PARTIAL,
+        'user' => SearchFilter::STRATEGY_PARTIAL,
+    ]
 )]
 class Customer
 {
