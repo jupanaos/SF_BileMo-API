@@ -14,6 +14,9 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[ApiResource]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    public const ROLE_BILEMO = 'ROLE_BILEMO';
+    public const ROLE_CUSTOMER = 'ROLE_CUSTOMER';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
