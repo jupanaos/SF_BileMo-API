@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProductCategoryRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductCategoryRepository::class)]
 #[ApiResource]
@@ -15,6 +16,7 @@ class ProductCategory
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups('getProduct')]
     #[ORM\Column(length: 150)]
     private ?string $name = null;
 

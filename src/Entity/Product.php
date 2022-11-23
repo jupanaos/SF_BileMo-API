@@ -5,9 +5,14 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProductRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: [
+        'groups' => ['getProduct']
+        ]
+)]
 class Product
 {
     #[ORM\Id]
@@ -15,19 +20,24 @@ class Product
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups('getProduct')]
     #[ORM\Column(length: 100)]
     private ?string $name = null;
 
+    #[Groups('getProduct')]
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
+    #[Groups('getProduct')]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?ProductCategory $category = null;
 
+    #[Groups('getProduct')]
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[Groups('getProduct')]
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 

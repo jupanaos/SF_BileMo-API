@@ -2,12 +2,32 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Post;
+use App\Entity\CustomerAddress;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CustomerRepository;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new Put(),
+        new Delete(),
+        new GetCollection(),
+        new Post(),
+    ],
+    normalizationContext: [
+        'groups' => ['getCustomer']
+        ]
+)]
 class Customer
 {
     #[ORM\Id]
@@ -15,29 +35,37 @@ class Customer
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups('getCustomer')]
     #[ORM\Column(length: 255)]
     private ?string $firstName = null;
 
+    #[Groups('getCustomer')]
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
 
+    #[Groups('getCustomer')]
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
+    #[Groups('getCustomer')]
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?CustomerAddress $address = null;
 
+    #[Groups('getCustomer')]
     #[ORM\Column]
     private ?string $phone = null;
 
+    #[Groups('getCustomer')]
     #[ORM\ManyToOne(inversedBy: 'customers')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[Groups('getCustomer')]
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[Groups('getCustomer')]
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 

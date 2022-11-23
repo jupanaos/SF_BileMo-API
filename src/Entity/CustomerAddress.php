@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Get;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CustomerAddressRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CustomerAddressRepository::class)]
 #[ApiResource]
@@ -15,15 +17,19 @@ class CustomerAddress
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups('getCustomer')]
     #[ORM\Column]
     private ?int $streetNumber = null;
 
+    #[Groups('getCustomer')]
     #[ORM\Column(length: 255)]
     private ?string $streetName = null;
 
+    #[Groups('getCustomer')]
     #[ORM\Column]
     private ?int $zipcode = null;
 
+    #[Groups('getCustomer')]
     #[ORM\Column(length: 255)]
     private ?string $city = null;
 
