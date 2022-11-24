@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter as FilterSearchFilter;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Serializer\ItemNormalizer;
 use App\Entity\CustomerAddress;
 use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,22 +13,49 @@ use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CustomerRepository;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter as SearchFilter;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 #[ApiResource(
+    // normalizationContext: ['groups' => ['get:customer']],
+    // denormalizationContext: ['groups' => ['post:customer']],
     operations: [
-        new Get(),
-        new Put(),
-        new Delete(),
-        new GetCollection(),
-        new Post(),
+        new Get(
+            normalizationContext: [
+            'groups' => ['get:customer:item']
+            ],
+        ),
+        // new Put(),
+        // new Delete(),
+        new Post(
+            denormalizationContext: [
+            'groups' => ['post:customer']
+            ],
+        ),
+        new GetCollection(
+            normalizationContext: [
+            'groups' => ['get:customer:collection']
+            ],
+        ),
     ],
-    normalizationContext: [
-        'groups' => ['getCustomer']
-        ]
 )]
+// #[Get(
+//     normalizationContext: [
+//         'groups' => ['getCustomer']
+//     ],
+// )]
+// #[Post(
+//     // normalizationContext: [
+//     //     'groups' => ['postCustomer']
+//     // ],
+//     denormalizationContext: [
+//         'groups' => ['postCustomer']
+//     ],
+// )]
 #[ApiFilter(
     SearchFilter::class,
     properties: [
@@ -43,40 +70,65 @@ class Customer
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('get:customer:collection')]
     private ?int $id = null;
 
-    #[Groups('getCustomer')]
     #[ORM\Column(length: 255)]
+    #[Groups(['get:customer:item', 'get:customer:collection', 'post:customer'])]
+    #[Length(
+        min: 2,
+        minMessage: 'Le nombre de caractères minimum est de {{ limit }}.',
+        max: 255,
+        maxMessage: 'Le nombre de caractères maximum est de {{ limit }}.'
+    )]
+    #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
+    #[NotNull(message: '{{ label }} est vide, veuillez entrer une valeur.')]
     private ?string $firstName = null;
 
-    #[Groups('getCustomer')]
     #[ORM\Column(length: 255)]
+    #[Groups(['get:customer:item', 'get:customer:collection', 'post:customer'])]
+    #[Length(
+        min: 2,
+        minMessage: 'Le nombre de caractères minimum est de {{ limit }}.',
+        max: 255,
+        maxMessage: 'Le nombre de caractères maximum est de {{ limit }}.'
+    )]
+    #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
+    #[NotNull(message: '{{ label }} est vide, veuillez entrer une valeur.')]
     private ?string $lastName = null;
 
-    #[Groups('getCustomer')]
     #[ORM\Column(length: 255)]
+    #[Groups(['get:customer:item', 'get:customer:collection', 'post:customer'])]
+    #[Length(
+        min: 2,
+        minMessage: 'Le nombre de caractères minimum est de {{ limit }}.',
+        max: 255,
+        maxMessage: 'Le nombre de caractères maximum est de {{ limit }}.'
+    )]
+    #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
+    #[NotNull(message: '{{ label }} est vide, veuillez entrer une valeur.')]
     private ?string $email = null;
 
-    #[Groups('getCustomer')]
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['get:customer:item', 'post:customer'])]
+    #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
     private ?CustomerAddress $address = null;
 
-    #[Groups('getCustomer')]
     #[ORM\Column]
+    #[Groups(['get:customer:item', 'post:customer'])]
     private ?string $phone = null;
 
-    #[Groups('getCustomer')]
     #[ORM\ManyToOne(inversedBy: 'customers')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[Groups('getCustomer')]
     #[ORM\Column]
+    #[Groups('get:customer:item')]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[Groups('getCustomer')]
     #[ORM\Column(nullable: true)]
+    #[Groups('get:customer:item')]
     private ?\DateTimeImmutable $updatedAt = null;
 
     public function getId(): ?int

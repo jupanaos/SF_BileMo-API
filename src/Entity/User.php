@@ -15,14 +15,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(operations: [
-    new Get(
-        read: false,
-        output: false,
-    ),
-    new GetCollection(
-        read: false,
-        output: false,
-    ),
+    new Get(),
+    new GetCollection(),
 ])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -46,11 +40,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[Groups('getCustomer')]
     #[ORM\Column(length: 255)]
     private ?string $username = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Customer::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Customer::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $customers;
 
     #[ORM\Column]
