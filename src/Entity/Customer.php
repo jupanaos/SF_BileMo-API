@@ -29,8 +29,6 @@ use Symfony\Component\Validator\Constraints\NotNull;
             'groups' => ['get:customer:item']
             ],
         ),
-        // new Put(),
-        // new Delete(),
         new Post(
             denormalizationContext: [
             'groups' => ['post:customer']
@@ -41,21 +39,15 @@ use Symfony\Component\Validator\Constraints\NotNull;
             'groups' => ['get:customer:collection']
             ],
         ),
+        new Put(
+            denormalizationContext: [
+            'groups' => ['put:customer']
+            ],
+        ),
+        new Delete(),
+        new Get(name: 'address', uriTemplate: '/apip/customer{id}/address')
     ],
 )]
-// #[Get(
-//     normalizationContext: [
-//         'groups' => ['getCustomer']
-//     ],
-// )]
-// #[Post(
-//     // normalizationContext: [
-//     //     'groups' => ['postCustomer']
-//     // ],
-//     denormalizationContext: [
-//         'groups' => ['postCustomer']
-//     ],
-// )]
 #[ApiFilter(
     SearchFilter::class,
     properties: [
@@ -74,7 +66,7 @@ class Customer
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['get:customer:item', 'get:customer:collection', 'post:customer'])]
+    #[Groups(['get:customer:item', 'get:customer:collection', 'post:customer', 'put:customer'])]
     #[Length(
         min: 2,
         minMessage: 'Le nombre de caractères minimum est de {{ limit }}.',
@@ -86,7 +78,7 @@ class Customer
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['get:customer:item', 'get:customer:collection', 'post:customer'])]
+    #[Groups(['get:customer:item', 'get:customer:collection', 'post:customer', 'put:customer'])]
     #[Length(
         min: 2,
         minMessage: 'Le nombre de caractères minimum est de {{ limit }}.',
@@ -98,7 +90,7 @@ class Customer
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['get:customer:item', 'get:customer:collection', 'post:customer'])]
+    #[Groups(['get:customer:item', 'get:customer:collection', 'post:customer', 'put:customer'])]
     #[Length(
         min: 2,
         minMessage: 'Le nombre de caractères minimum est de {{ limit }}.',
@@ -111,12 +103,12 @@ class Customer
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['get:customer:item', 'post:customer'])]
+    #[Groups(['get:customer:item', 'post:customer', 'put:customer'])]
     #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
     private ?CustomerAddress $address = null;
 
     #[ORM\Column]
-    #[Groups(['get:customer:item', 'post:customer'])]
+    #[Groups(['get:customer:item', 'post:customer', 'put:customer'])]
     private ?string $phone = null;
 
     #[ORM\ManyToOne(inversedBy: 'customers')]
@@ -124,11 +116,11 @@ class Customer
     private ?User $user = null;
 
     #[ORM\Column]
-    #[Groups('get:customer:item')]
+    #[Groups(['get:customer:item'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups('get:customer:item')]
+    #[Groups(['get:customer:item'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     public function getId(): ?int
