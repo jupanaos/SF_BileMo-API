@@ -2,12 +2,16 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Action\NotFoundAction;
+use ApiPlatform\Metadata\Get;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CustomerAddressRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Entity(repositoryClass: CustomerAddressRepository::class)]
-#[ApiResource]
 class CustomerAddress
 {
     #[ORM\Id]
@@ -15,16 +19,36 @@ class CustomerAddress
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['get:customer:item', 'get:customer:address', 'post:customer', 'put:customer'])]
     #[ORM\Column]
+    #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
     private ?int $streetNumber = null;
 
+    #[Groups(['get:customer:item', 'get:customer:address', 'post:customer', 'put:customer'])]
     #[ORM\Column(length: 255)]
+    #[Length(
+        min: 1,
+        minMessage: 'Le nombre de caractères minimum est de {{ limit }}.',
+        max: 255,
+        maxMessage: 'Le nombre de caractères maximum est de {{ limit }}.'
+    )]
+    #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
     private ?string $streetName = null;
 
+    #[Groups(['get:customer:item', 'get:customer:address', 'post:customer', 'put:customer'])]
     #[ORM\Column]
+    #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
     private ?int $zipcode = null;
 
+    #[Groups(['get:customer:item', 'get:customer:address', 'post:customer', 'put:customer'])]
     #[ORM\Column(length: 255)]
+    #[Length(
+        min: 1,
+        minMessage: 'Le nombre de caractères minimum est de {{ limit }}.',
+        max: 255,
+        maxMessage: 'Le nombre de caractères maximum est de {{ limit }}.'
+    )]
+    #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
     private ?string $city = null;
 
     public function getId(): ?int

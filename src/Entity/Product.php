@@ -2,12 +2,34 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProductRepository;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new GetCollection(),
+        new Get()
+    ],
+    normalizationContext: [
+        'groups' => ['getProduct']
+    ]
+)]
+#[ApiFilter(
+    SearchFilter::class,
+    properties: [
+        'name' => SearchFilter::STRATEGY_PARTIAL,
+        'category' => SearchFilter::STRATEGY_PARTIAL,
+    ]
+)]
 class Product
 {
     #[ORM\Id]
@@ -15,19 +37,39 @@ class Product
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups('getProduct')]
     #[ORM\Column(length: 100)]
+    #[Length(
+        min: 1,
+        minMessage: 'Le nombre de caractères minimum est de {{ limit }}.',
+        max: 100,
+        maxMessage: 'Le nombre de caractères maximum est de {{ limit }}.'
+    )]
+    #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
     private ?string $name = null;
 
+    #[Groups('getProduct')]
     #[ORM\Column(length: 255)]
+    #[Length(
+        min: 1,
+        minMessage: 'Le nombre de caractères minimum est de {{ limit }}.',
+        max: 255,
+        maxMessage: 'Le nombre de caractères maximum est de {{ limit }}.'
+    )]
+    #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
     private ?string $description = null;
 
+    #[Groups('getProduct')]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
     private ?ProductCategory $category = null;
 
+    #[Groups('getProduct')]
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[Groups('getProduct')]
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
