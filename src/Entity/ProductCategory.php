@@ -14,8 +14,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[ORM\Entity(repositoryClass: ProductCategoryRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(),
-        new Get()
+        new GetCollection(uriTemplate: '/categories'),
+        new Get(uriTemplate: '/categories/{id}')
     ],
 )]
 class ProductCategory

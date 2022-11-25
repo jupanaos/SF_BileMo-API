@@ -5,7 +5,6 @@ namespace App\Entity;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Serializer\ItemNormalizer;
 use App\Entity\CustomerAddress;
 use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
@@ -45,7 +44,13 @@ use Symfony\Component\Validator\Constraints\NotNull;
             ],
         ),
         new Delete(),
-        new Get(name: 'address', uriTemplate: '/apip/customer{id}/address')
+        new Get(
+            name: 'address',
+            uriTemplate: '/customers/{id}/address',
+            normalizationContext: [
+                'groups' => ['get:customer:address']
+            ]
+        )
     ],
 )]
 #[ApiFilter(
@@ -103,7 +108,7 @@ class Customer
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['get:customer:item', 'post:customer', 'put:customer'])]
+    #[Groups(['get:customer:item', 'get:customer:address', 'post:customer', 'put:customer'])]
     #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
     private ?CustomerAddress $address = null;
 
