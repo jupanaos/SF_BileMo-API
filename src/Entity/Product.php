@@ -3,11 +3,13 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Post;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProductRepository;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Length;
@@ -17,7 +19,13 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[ApiResource(
     operations: [
         new GetCollection(),
-        new Get()
+        new Get(),
+        new Post(
+            security: "is_granted('ROLE_BILEMO')"
+        ),
+        new Put(
+            security: "is_granted('ROLE_BILEMO')"
+        )
     ],
     normalizationContext: [
         'groups' => ['getProduct']
