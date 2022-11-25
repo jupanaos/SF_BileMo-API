@@ -2,10 +2,7 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Action\NotFoundAction;
-use ApiPlatform\Metadata\Get;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CustomerAddressRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Length;
