@@ -20,8 +20,6 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 #[ApiResource(
-    // normalizationContext: ['groups' => ['get:customer']],
-    // denormalizationContext: ['groups' => ['post:customer']],
     operations: [
         new Get(
             normalizationContext: [
