@@ -25,6 +25,8 @@ use Symfony\Component\Validator\Constraints\NotNull;
             normalizationContext: [
             'groups' => ['get:customer:item']
             ],
+            // security: "is_granted('CUSTOMER_MANAGE')",
+            // securityMessage: "Vous n'êtes pas propriétaire de cette ressource."
         ),
         new Post(
             denormalizationContext: [
@@ -35,6 +37,8 @@ use Symfony\Component\Validator\Constraints\NotNull;
             normalizationContext: [
             'groups' => ['get:customer:collection']
             ],
+            security: "is_granted('CUSTOMER_MANAGE')",
+            securityMessage: "Vous n'êtes pas propriétaire de cette ressource."
         ),
         new Put(
             denormalizationContext: [
