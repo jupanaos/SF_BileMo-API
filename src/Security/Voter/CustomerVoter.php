@@ -26,7 +26,7 @@ class CustomerVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        $user = $token->getUser()->getUserIdentifier();
+        $user = $token->getUser();
         // if the user is anonymous, do not grant access
         if (!$user instanceof UserInterface) {
             return false;
@@ -34,6 +34,7 @@ class CustomerVoter extends Voter
 
         /** @var Customer $customer */
         $customer = $subject;
+
 
         return match($attribute) {
             self::CUSTOMER_MANAGE => $this->canAccess($customer, $user),
@@ -43,7 +44,7 @@ class CustomerVoter extends Voter
 
     private function canAccess(Customer $customer, User $user): bool
     {
-        return $user === $customer->getUser()->getUserIdentifier();
+        return $user === $customer->getUser();
     }
 
 }
