@@ -26,7 +26,7 @@ class CustomerVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        $user = $token->getUser();
+        $user = $token->getUser()->getUserIdentifier();
         // if the user is anonymous, do not grant access
         if (!$user instanceof UserInterface) {
             return false;
@@ -43,7 +43,7 @@ class CustomerVoter extends Voter
 
     private function canAccess(Customer $customer, User $user): bool
     {
-        return $user === $customer->getUser();
+        return $user === $customer->getUser()->getUserIdentifier();
     }
 
 }
