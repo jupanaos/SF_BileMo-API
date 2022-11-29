@@ -14,11 +14,13 @@ use App\Repository\CustomerRepository;
 use ApiPlatform\Metadata\GetCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter as SearchFilter;
+use App\Doctrine\CustomerSetUserListener;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
+#[ORM\EntityListeners([CustomerSetUserListener::class])]
 #[ApiResource(
     operations: [
         new Get(
@@ -57,7 +59,6 @@ use Symfony\Component\Validator\Constraints\NotNull;
         'firstName' => SearchFilter::STRATEGY_PARTIAL,
         'lastName' => SearchFilter::STRATEGY_PARTIAL,
         'email' => SearchFilter::STRATEGY_PARTIAL,
-        'user' => SearchFilter::STRATEGY_PARTIAL,
     ]
 )]
 class Customer
@@ -125,6 +126,11 @@ class Customer
     #[ORM\Column(nullable: true)]
     #[Groups(['get:customer:item'])]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
