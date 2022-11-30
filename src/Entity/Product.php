@@ -19,8 +19,28 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(),
-        new Get(),
+        new GetCollection(
+            openapiContext: [
+                'responses' => [
+                    '200' => ['description' => 'Products collection.'],
+                    '400' => ['description' => 'Bad request.'],
+                    '401' => ['description' => 'Authentication is required.'],
+                    '403' => ['description' => 'Invalid JWT token.'],
+                    '404' => ['description' => 'Product resource not found.'],
+                ]
+            ],
+        ),
+        new Get(
+            openapiContext: [
+                'responses' => [
+                    '200' => ['description' => 'Product resource.'],
+                    '400' => ['description' => 'Bad request.'],
+                    '401' => ['description' => 'Authentication is required.'],
+                    '403' => ['description' => 'Invalid JWT token.'],
+                    '404' => ['description' => 'Product resource not found.'],
+                ]
+            ],
+        ),
         new Post(
             security: "is_granted('ROLE_BILEMO')",
             securityMessage: 'You need a valid token to execute this action.',
@@ -29,7 +49,14 @@ use Symfony\Component\Validator\Constraints\NotBlank;
             ],
             uriTemplate: '/products/create',
             openapiContext: [
-                'summary' => 'Creates a Product resource. A valid token is required.'
+                'summary' => 'Creates a Product resource. A valid token is required.',
+                'responses' => [
+                    '201' => ['description' => 'Product resource created.'],
+                    '400' => ['description' => 'Bad request.'],
+                    '401' => ['description' => 'Authentication is required.'],
+                    '403' => ['description' => 'Invalid JWT token.'],
+                    '404' => ['description' => 'Product resource not found.'],
+                ]
             ],
         ),
         new Patch(
@@ -40,7 +67,14 @@ use Symfony\Component\Validator\Constraints\NotBlank;
             ],
             uriTemplate: '/products/{id}/patch',
             openapiContext: [
-                'summary' => 'Updates a Product resource. A valid token is required.'
+                'summary' => 'Updates a Product resource. A valid token is required.',
+                'responses' => [
+                    '200' => ['description' => 'Product resource updated.'],
+                    '400' => ['description' => 'Bad request.'],
+                    '401' => ['description' => 'Authentication is required.'],
+                    '403' => ['description' => 'Invalid JWT token.'],
+                    '404' => ['description' => 'Product resource not found.'],
+                ]
             ],
         ),
         new Delete(
@@ -48,7 +82,14 @@ use Symfony\Component\Validator\Constraints\NotBlank;
             securityMessage: 'You need a valid token to execute this action.',
             uriTemplate: '/products/{id}/delete',
             openapiContext: [
-                'summary' => 'Removes a Product resource. A valid token is required.'
+                'summary' => 'Removes a Product resource. A valid token is required.',
+                'responses' => [
+                    '204' => ['description' => 'Product resource deleted.'],
+                    '400' => ['description' => 'Bad request.'],
+                    '401' => ['description' => 'Authentication is required.'],
+                    '403' => ['description' => 'Invalid JWT token.'],
+                    '404' => ['description' => 'Product resource not found.'],
+                ]
             ],
         ),
         new Get(

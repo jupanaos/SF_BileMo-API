@@ -27,16 +27,44 @@ use Symfony\Component\Validator\Constraints\NotNull;
             normalizationContext: [
             'groups' => ['get:customer:item']
             ],
+            openapiContext: [
+                'responses' => [
+                    '200' => ['description' => 'Customers collection.'],
+                    '400' => ['description' => 'Bad request.'],
+                    '401' => ['description' => 'Authentication is required.'],
+                    '403' => ['description' => 'Invalid JWT token.'],
+                    '404' => ['description' => 'Customer resource not found.'],
+                ]
+            ],
         ),
         new Post(
             denormalizationContext: [
             'groups' => ['post:customer']
             ],
             uriTemplate: '/customers/create',
+            openapiContext: [
+                'summary' => 'Creates a Customer resource.',
+                'responses' => [
+                    '201' => ['description' => 'Customer resource created.'],
+                    '400' => ['description' => 'Bad request.'],
+                    '401' => ['description' => 'Authentication is required.'],
+                    '403' => ['description' => 'Invalid JWT token.'],
+                    '404' => ['description' => 'Customer resource not found.'],
+                ]
+            ],
         ),
         new GetCollection(
             normalizationContext: [
             'groups' => ['get:customer:collection']
+            ],
+            openapiContext: [
+                'responses' => [
+                    '200' => ['description' => 'Customers collection.'],
+                    '400' => ['description' => 'Bad request.'],
+                    '401' => ['description' => 'Authentication is required.'],
+                    '403' => ['description' => 'Invalid JWT token.'],
+                    '404' => ['description' => 'Customer resource not found.'],
+                ]
             ],
         ),
         new Patch(
@@ -44,15 +72,42 @@ use Symfony\Component\Validator\Constraints\NotNull;
             'groups' => ['patch:customer']
             ],
             uriTemplate: '/customers/{id}/update',
+            openapiContext: [
+                'summary' => 'Updates a Customer resource.',
+                'responses' => [
+                    '200' => ['description' => 'Customer resource updated.'],
+                    '400' => ['description' => 'Bad request.'],
+                    '401' => ['description' => 'Authentication is required.'],
+                    '403' => ['description' => 'Invalid JWT token.'],
+                    '404' => ['description' => 'Customer resource not found.'],
+                ]
+            ],
         ),
         new Delete(
             uriTemplate: '/customers/{id}/delete',
+            openapiContext: [
+                'summary' => 'Removes a Customer resource.',
+                'responses' => [
+                    '204' => ['description' => 'Customer resource deleted.'],
+                    '400' => ['description' => 'Bad request.'],
+                    '401' => ['description' => 'Authentication is required.'],
+                    '403' => ['description' => 'Invalid JWT token.'],
+                    '404' => ['description' => 'Customer resource not found.'],
+                ]
+            ],
         ),
         new Get(
             name: 'address',
             uriTemplate: '/customers/{id}/address',
             openapiContext: [
-                'summary' => 'Retrieves a Customer Address resource.'
+                'summary' => 'Retrieves a Customer Address resource.',
+                'responses' => [
+                    '200' => ['description' => 'Customer Address resource.'],
+                    '400' => ['description' => 'Bad request.'],
+                    '401' => ['description' => 'Authentication is required.'],
+                    '403' => ['description' => 'Invalid JWT token.'],
+                    '404' => ['description' => 'Customer Address resource not found.'],
+                ]
             ],
             normalizationContext: [
                 'groups' => ['get:customer:address']
