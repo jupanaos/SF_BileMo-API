@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiFilter;
@@ -11,6 +10,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProductRepository;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\Patch;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -21,14 +21,34 @@ use Symfony\Component\Validator\Constraints\NotBlank;
         new GetCollection(),
         new Get(),
         new Post(
-            security: "is_granted('ROLE_BILEMO')"
+            security: "is_granted('ROLE_BILEMO')",
+            securityMessage: 'You need a valid token to execute this action.',
+            denormalizationContext: [
+                'groups' => ['post:product']
+            ],
+            uriTemplate: '/products/create',
         ),
-        new Put(
-            security: "is_granted('ROLE_BILEMO')"
+        new Patch(
+            security: "is_granted('ROLE_BILEMO')",
+            securityMessage: 'You need a valid token to execute this action.',
+            denormalizationContext: [
+                'groups' => ['patch:product']
+            ],
+            uriTemplate: '/products/{id}/patch',
+        ),
+        new Get(
+            name: 'category',
+            uriTemplate: '/products/{id}/category',
+            openapiContext: [
+                'summary' => 'Retrieves the Category of a Product resource.'
+            ],
+            normalizationContext: [
+                'groups' => ['get:products:category']
+            ]
         )
     ],
     normalizationContext: [
-        'groups' => ['getProduct']
+        'groups' => ['get:product']
     ]
 )]
 #[ApiFilter(
@@ -45,7 +65,7 @@ class Product
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups('getProduct')]
+    #[Groups(['get:product', 'post:product', 'patch:product'])]
     #[ORM\Column(length: 100)]
     #[Length(
         min: 1,
@@ -56,7 +76,7 @@ class Product
     #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
     private ?string $name = null;
 
-    #[Groups('getProduct')]
+    #[Groups(['get:product', 'post:product', 'patch:product'])]
     #[ORM\Column(length: 255)]
     #[Length(
         min: 1,
@@ -67,19 +87,22 @@ class Product
     #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
     private ?string $description = null;
 
-    #[Groups('getProduct')]
+    #[Groups(['get:product', 'post:product', 'patch:product', 'get:products:category'])]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
     private ?ProductCategory $category = null;
 
-    #[Groups('getProduct')]
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[Groups('getProduct')]
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {

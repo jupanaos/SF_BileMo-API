@@ -13,10 +13,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Entity(repositoryClass: ProductCategoryRepository::class)]
 #[ApiResource(
-    operations: [
-        new GetCollection(uriTemplate: '/categories'),
-        new Get(uriTemplate: '/categories/{id}')
-    ],
+    operations: [],
 )]
 class ProductCategory
 {
@@ -25,15 +22,15 @@ class ProductCategory
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups('getProduct')]
+    #[Groups(['get:product', 'get:products:category', 'post:product', 'patch:product'])]
     #[ORM\Column(length: 150)]
     #[Length(
         min: 1,
-        minMessage: 'Le nombre de caractères minimum est de {{ limit }}.',
+        minMessage: '{{ label }} must have at least {{ limit }} characters.',
         max: 150,
-        maxMessage: 'Le nombre de caractères maximum est de {{ limit }}.'
+        maxMessage: '{{ label }} cannot contain more than {{ limit }} characters.'
     )]
-    #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
+    #[NotBlank(message: '{{ label }} is empty, please enter a value.')]
     private ?string $name = null;
 
     public function getId(): ?int

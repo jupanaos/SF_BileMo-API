@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
 use App\Entity\CustomerAddress;
 use ApiPlatform\Metadata\Delete;
@@ -14,6 +13,7 @@ use App\Repository\CustomerRepository;
 use ApiPlatform\Metadata\GetCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter as SearchFilter;
+use ApiPlatform\Metadata\Patch;
 use App\Doctrine\CustomerSetUserListener;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -32,21 +32,28 @@ use Symfony\Component\Validator\Constraints\NotNull;
             denormalizationContext: [
             'groups' => ['post:customer']
             ],
+            uriTemplate: '/customers/create',
         ),
         new GetCollection(
             normalizationContext: [
             'groups' => ['get:customer:collection']
             ],
         ),
-        new Put(
+        new Patch(
             denormalizationContext: [
-            'groups' => ['put:customer']
+            'groups' => ['patch:customer']
             ],
+            uriTemplate: '/customers/{id}/update',
         ),
-        new Delete(),
+        new Delete(
+            uriTemplate: '/customers/{id}/delete',
+        ),
         new Get(
             name: 'address',
             uriTemplate: '/customers/{id}/address',
+            openapiContext: [
+                'summary' => 'Retrieves a Customer Address resource.'
+            ],
             normalizationContext: [
                 'groups' => ['get:customer:address']
             ]
@@ -70,49 +77,49 @@ class Customer
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['get:customer:item', 'get:customer:collection', 'post:customer', 'put:customer'])]
+    #[Groups(['get:customer:item', 'get:customer:collection', 'post:customer', 'patch:customer'])]
     #[Length(
         min: 2,
-        minMessage: 'Le nombre de caractères minimum est de {{ limit }}.',
+        minMessage: '{{ label }} must have at least {{ limit }} characters.',
         max: 255,
-        maxMessage: 'Le nombre de caractères maximum est de {{ limit }}.'
+        maxMessage: '{{ label }} cannot contain more than {{ limit }} characters.'
     )]
-    #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
-    #[NotNull(message: '{{ label }} est vide, veuillez entrer une valeur.')]
+    #[NotBlank(message: '{{ label }} is empty, please enter a value.')]
+    #[NotNull(message: '{{ label }} is empty, please enter a value.')]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['get:customer:item', 'get:customer:collection', 'post:customer', 'put:customer'])]
+    #[Groups(['get:customer:item', 'get:customer:collection', 'post:customer', 'patch:customer'])]
     #[Length(
         min: 2,
-        minMessage: 'Le nombre de caractères minimum est de {{ limit }}.',
+        minMessage: '{{ label }} must have at least {{ limit }} characters.',
         max: 255,
-        maxMessage: 'Le nombre de caractères maximum est de {{ limit }}.'
+        maxMessage: '{{ label }} cannot contain more than {{ limit }} characters.'
     )]
-    #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
-    #[NotNull(message: '{{ label }} est vide, veuillez entrer une valeur.')]
+    #[NotBlank(message: '{{ label }} is empty, please enter a value.')]
+    #[NotNull(message: '{{ label }} is empty, please enter a value.')]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['get:customer:item', 'get:customer:collection', 'post:customer', 'put:customer'])]
+    #[Groups(['get:customer:item', 'get:customer:collection', 'post:customer', 'patch:customer'])]
     #[Length(
         min: 2,
-        minMessage: 'Le nombre de caractères minimum est de {{ limit }}.',
+        minMessage: '{{ label }} must have at least {{ limit }} characters.',
         max: 255,
-        maxMessage: 'Le nombre de caractères maximum est de {{ limit }}.'
+        maxMessage: '{{ label }} cannot contain more than {{ limit }} characters.'
     )]
-    #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
-    #[NotNull(message: '{{ label }} est vide, veuillez entrer une valeur.')]
+    #[NotBlank(message: '{{ label }} is empty, please enter a value.')]
+    #[NotNull(message: '{{ label }} is empty, please enter a value.')]
     private ?string $email = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['get:customer:item', 'get:customer:address', 'post:customer', 'put:customer'])]
-    #[NotBlank(message: '{{ label }} est vide, veuillez entrer une valeur.')]
+    #[Groups(['get:customer:item', 'get:customer:address', 'post:customer', 'patch:customer'])]
+    #[NotBlank(message: '{{ label }} is empty, please enter a value.')]
     private ?CustomerAddress $address = null;
 
     #[ORM\Column]
-    #[Groups(['get:customer:item', 'post:customer', 'put:customer'])]
+    #[Groups(['get:customer:item', 'post:customer', 'patch:customer'])]
     private ?string $phone = null;
 
     #[ORM\ManyToOne(inversedBy: 'customers')]
