@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProductRepository;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Patch;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Length;
@@ -27,6 +28,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
                 'groups' => ['post:product']
             ],
             uriTemplate: '/products/create',
+            openapiContext: [
+                'summary' => 'Creates a Product resource. A valid token is required.'
+            ],
         ),
         new Patch(
             security: "is_granted('ROLE_BILEMO')",
@@ -35,6 +39,17 @@ use Symfony\Component\Validator\Constraints\NotBlank;
                 'groups' => ['patch:product']
             ],
             uriTemplate: '/products/{id}/patch',
+            openapiContext: [
+                'summary' => 'Updates a Product resource. A valid token is required.'
+            ],
+        ),
+        new Delete(
+            security: "is_granted('ROLE_BILEMO')",
+            securityMessage: 'You need a valid token to execute this action.',
+            uriTemplate: '/products/{id}/delete',
+            openapiContext: [
+                'summary' => 'Removes a Product resource. A valid token is required.'
+            ],
         ),
         new Get(
             name: 'category',

@@ -13,3 +13,5 @@ api_platform:
                 name: Authorization
                 type: header
     metadata_backward_compatibility_layer: false
+    defaults:
+        pagination_items_per_page: 5
